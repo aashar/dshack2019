@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="css/epoch.css">
+<link rel="stylesheet" type="text/css" href="css/site.css">
+<style>
+  body { background-color: #F8F8F8; min-width:550px; font-family: "Trebuchet MS"; }
+  hr { clear:both; }
+  tbody tr:nth-child(even) { background: #222222; }
+  div.section { padding:2px; clear:both }
+  div.quotetable { padding:2px; display: inline-block; white-space: nowrap; }
+  label.divCaption { font-weight: bold; text-decoration: underline; }
+  button { background-color:#008CBA; padding: 5px 25px; text-align: center; border-radius: 6px;
+  display: inline-block; border: none; color: #ffffff; text-decoration: underline; }
+  button:hover { background-color: #DAA520; }
+  button:disabled { opacity: 0.6; text-decoration: none; cursor: not-allowed; }
+  
+.progress {
+  height: 1.5em;
+  width: 100%;
+  background-color: #c9c9c9;
+  position: relative;
+}
+.progress:before {
+  content: attr(data-label);
+  font-size: 0.8em;
+  position: absolute;
+  text-align: center;
+  top: 5px;
+  left: 0;
+  right: 0;
+}
+.progress .value {
+  background-color: #000080;
+  display: inline-block;
+  height: 100%;
+}
+</style>
+<title>ITWC 10 yrs T-Bills streaming mock-up</title>
+</head>
+<body>
+<script src="js/jquery.js"></script>
+<script src="js/d3.js"></script>
+<script src="js/epoch.min.js"></script>
+
+<div class="section">
+  <span style="width:33%; vertical-align: bottom; float:left"><font size="4">ITWC - Hackateers</font></span>
+  <span style="width:33%; vertical-align: bottom; float:left; text-align: center"><font size="4"><b>US 10 year Treasury Note Yield</b></font></span>
+  <span style="width:34%; vertical-align: bottom; float:right; text-align:right"><font size="2"><i>Updated at <span id="updTs"></span></i></font></span>
+</div><br/>
+<hr/>
+<div class="section"><font size="6">
+  <span style="width:29%; float:left"><label>Prev Close:</label><label id="prevCloseLbl">2.4787</label></span>
+  <span style="width:6%; float:left; text-align:center">&rarr;</span>
+  <span style="width:29%; float:left; text-align: center"><label>Price Mid:</label><label id="priceMidLbl">0</label>&nbsp;&nbsp;</span>
+  <span style="width:6%; float:left; text-align:center">&rarr;</span>
+  <span style="width:30%; float:right; text-align:right"><label>Predict-5 day:</label><label id="modelOutputLbl"></label></span>
+</font></div><br/><br/><br/><br/>
+<div><font size="6">
+  <span style="float:left; color:green"><button style="background-color: green;">BUY</button></span>
+  <span style="float:right; color:red; horizontal-align:right"><button style="background-color: red;">SELL</button></span></font>
+</div><br/><br/><br/>
+<div style="clear:both" class="progress">
+  <span class="value" id="buySellInd" style="width:50%;"></span>
+</div><br/>
+<div class="section" style="width=100%; horizontal-align:middle"><font size="6">
+  <span id="gaugeChart" class="epoch gauge-small" style="width: 300px; height: 200px; width:30%; float:left; left: 35%"></span>
+</font></div><br/><br/>
+
+<script language="javascript" type="text/javascript">
+  var gaugeChart = $('#gaugeChart').epoch({
+	type: 'time.gauge',
+	value: 0.5
+  });
+
+  function init() {
+    startPriceUpdate();
+  }
+  
+  function startPriceUpdate() {
+	setTimeout(function () {
+	  updatePrice();
+	  startPriceUpdate();
+	}, 2000);
+  }
+
+  function updatePrice() {
+   var recom = 3.1228;
+   var a = (Math.round(Math.random()*40)-20)/100;
+   var b = (Math.round(recom*a*10000)/10000);
+ 	document.getElementById("updTs").innerHTML = new Date().toJSON().slice(0,19).replace(/-/g,'/');
+   document.getElementById("priceMidLbl").innerHTML = (b + recom + "").substring(0, 7);;
+   document.getElementById("modelOutputLbl").innerHTML = recom;
+	document.getElementById("buySellInd").style.width = (a + 0.2) * 100 + "%";
+   gaugeChart.push(a);
+  }
+
+  window.addEventListener("load", init, false);
+</script>
+</body>
